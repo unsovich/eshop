@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %} {{ query }} results {% endblock %}
+{% block content %}
+<!-- BREADCRUMB -->
+<div id="breadcrumb">
+	<div class="container">
+		<ul class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li class="active">Search results for "{{ query }}"</li>
+		</ul>
+	</div>
+</div>
+<!-- /BREADCRUMB -->
+
+<div class="section">
+	<div class="container">
+		<div class="row">
+			<div id="main" class="col-md-12">
+				<div id="store">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="order-summary clearfix">
+								<div class="section-title">
+									<h3 class="title">Search results for "{{ query }}" </h3>
+								</div>
+								<table class="shopping-cart-table table">
+									<thead>
+										<tr>
+											<th></th>
+											<th class="text-center">Product</th>
+											<th class="text-center">Price</th>
+											<th class="text-right"></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for product in products %}
+											<tr>
+												<td class="thumb">
+													<a href="{{ product.get_absolute_url }}">
+														<img src="{{ product.image.url }}" alt="" style="height: 100px">
+													</a></td>
+												<td class="details text-center"> <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>	</td>
+												<td class="price text-center"><strong>{{ product.price }}</strong></td>
+												<td class="text-right"><a href="{{ product.get_absolute_url }}" class="main-btn quick-view"><i class="fa fa-search-plus"></i>To product</a>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

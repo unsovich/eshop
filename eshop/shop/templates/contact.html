@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Contact us {% endblock %}
+{% block content %}
+<!-- Breadcrumb Start -->
+<div id="breadcrumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Contact Us</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Contact Start -->
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">Contact form</h3>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{message.tags}}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <form id="checkout-form" class="clearfix" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Send form">
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="shiping-methods">
+                    <div class="section-title">
+                        <h3 class="title">Contact Information</h3>
+                    </div>
+                    <div >
+                        {{ setting.contact | safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /section -->
+<!-- Contact End -->
+{% endblock %}

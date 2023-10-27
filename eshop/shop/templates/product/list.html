@@ -1,0 +1,141 @@
+{% load static %}
+	<!-- main slider -->
+	<div id="home">
+		<div class="container">
+			<div id="home-slick">
+				{% for product in products_slider %}
+				<div class="banner banner-1">
+					<img src="{{ product.image.url }}" alt="" style="height: 600px; object-fit: cover;">
+					<div class="banner-caption text-center">
+						<h1>{{ product.name }}</h1>
+						<h3 class="white-color font-weak">${{ product.price }}</h3>
+						<a href="{{ product.get_absolute_url }}" class="primary-btn">Shop Now</a>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<!-- main slider -->
+
+	<!-- cheapest products -->
+	<div class="section">
+		<div class="container">
+			<div class="row">
+				<!--  title -->
+				<div class="col-md-12">
+					<div class="section-title">
+						<h2 class="title">Cheapest products</h2>
+					</div>
+				</div>
+				<!-- /title -->
+
+				<!-- products -->
+				{% for product in products_cheapest %}
+				<div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="product product-single">
+						<div class="product-view">
+							<a href="{{ product.get_absolute_url }}">
+								<img src="{{ product.image.url }}" width="100%" alt="">
+							</a>
+						</div>
+						<div class="product-body">
+							<h3 class="product-price">${{ product.price }} <br> <del class="product-old-price">${{ product.price }}</del></h3>
+							<div class="product-rating">
+								<i class="fa fa-star{% if product.average_review < 1%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 2%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 3%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 4%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 5%}-o empty{% endif%}"></i>
+                                {{ product.average_review | floatformat:"1" }} / {{ product.count_review }}
+							</div>
+							<h2 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				<!-- /products  -->
+			</div>
+		</div>
+	</div>
+	<!-- /cheapest products -->
+
+	<!-- new products -->
+	<div class="section">
+		<div class="container">
+			<div class="row">
+				<!-- title -->
+				<div class="col-md-12">
+					<div class="section-title">
+						<h2 class="title">New Products</h2>
+					</div>
+				</div>
+				<!-- /title -->
+
+				{% for product in products_latest %}
+				<div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="product product-single">
+						<div class="product-view">
+							<a href="{{ product.get_absolute_url }}">
+								<img src="{{ product.image.url }}" width="100%" alt="">
+							</a>
+						</div>
+						<div class="product-body">
+							<h3 class="product-price">${{ product.price }}</h3>
+							<div class="product-rating">
+								<i class="fa fa-star{% if product.average_review < 1%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 2%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 3%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 4%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 5%}-o empty{% endif%}"></i>
+                                {{ product.average_review | floatformat:"1" }} / {{ product.count_review }}
+							</div>
+							<h2 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<!-- new products -->
+
+	<!-- special products -->
+	<div class="section">
+		<div class="container">
+			<div class="row">
+				<!-- title -->
+				<div class="col-md-12">
+					<div class="section-title">
+						<h2 class="title">Picked for you</h2>
+					</div>
+				</div>
+				<!-- title -->
+				{% for product in products_random %}
+				<div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="product product-single">
+						<div class="product-view">
+							<a href="{{ product.get_absolute_url }}">
+								<img src="{{ product.image.url }}" width="100%" alt="">
+							</a>
+						</div>
+						<div class="product-body">
+							<h3 class="product-price">${{ product.price }}</h3>
+							<div class="product-rating">
+								<i class="fa fa-star{% if product.average_review < 1%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 2%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 3%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 4%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if product.average_review < 5%}-o empty{% endif%}"></i>
+                                {{ product.average_review | floatformat:"1" }} / {{ product.count_review }}
+							</div>
+							<h2 class="product-name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<!-- /special products -->

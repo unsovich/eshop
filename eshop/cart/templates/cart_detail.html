@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Shopping Cart {% endblock %}
+
+{% block content %}
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Cart</li>
+            </ul>
+        </div>
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="order-summary clearfix">
+                        <div class="section-title">
+                            <h3 class="title">Your shopping cart</h3>
+                        </div>
+                        <table class="shopping-cart-table table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-right"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart %}
+                                    <tr>
+                                        <td class="thumb">
+                                            <img src="{{ item.product.image.url }}" alt="">
+                                        </td>
+                                        <td class="details">
+                                            <a href="{{ item.product.get_absolute_url }}">
+                                                {{ item.product.name }}
+                                            </a>
+                                        </td>
+                                        <td class="price text-center">
+                                            <strong>
+                                                {{ item.product.price|default:"N/A" }}
+                                            </strong>
+                                        </td>
+                                        <td class="qty text-center">
+                                            <form action="{% url 'cart:cart_add' item.product.id %}" method="post">
+                                                {{ item.update_quantity_form.quantity }}
+                                                {{ item.update_quantity_form.override }}
+                                                <input type="submit" value="Update">
+                                                {% csrf_token %}
+                                            </form>
+                                        </td>
+                                        <td class="total text-center">
+                                            <strong class="primary-color">${{ item.total_price }}</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <form action="{% url 'cart:cart_remove' item.product.id %}" method="post">
+                                                <input type="submit" value="Remove">
+                                                {% csrf_token %}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="empty" colspan="3"></th>
+                                    <th>SUBTOTAL</th>
+                                    <th colspan="2" class="sub-total">${{ cart.get_total_price }}</th>
+                                </tr>
+                                {% if cart.coupon %}
+                                    <tr>
+                                        <th class="empty" colspan="3"></th>
+                                        <th>COUPON</th>
+                                        <td colspan="4">"{{ cart.coupon.code }}" coupon ({{ cart.coupon.discount }}% off)</td>
+                                    </tr>
+                                        <tr>
+                                        <td class="empty" colspan="3"></td>
+                                        <th>DISCOUNT</th>
+                                        <td class="num neg" colspan="4">
+                                            – ${{ cart.get_discount|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <th class="empty" colspan="3"></th>
+                                    <th>SHIPPING</th>
+                                    <td colspan="2">Free Shipping</td>
+                                </tr>
+                                <tr>
+                                    <th class="empty" colspan="3"></th>
+                                    <th>TOTAL</th>
+                                    <th colspan="2" class="total">${{ cart.get_total_price_after_discount|floatformat:2 }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- COUPON -->
+                        <p>Apply a coupon:</p>
+                        <form action="{% url "coupons:apply" %}" method="post">
+                            {{ coupon_apply_form }}
+                            <input type="submit" value="Apply">
+                            {% csrf_token %}
+                        </form>
+                        <!-- /COUPON -->
+
+                        <div class="pull-right">
+                            <a href="/" class="main-btn">Continue shopping</a>
+                            <a href="{% url "orders:order_create" %}" class="primary-btn">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+          {% if recommended_products %}
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="title">Recommended Products</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for p in recommended_products %}
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="product product-single">
+                  <div class="product-view">
+                      <div class="item">
+                        <a href="{{ p.get_absolute_url }}" >
+                          <img src="{% if p.image %}{{ p.image.url }}{% else %}
+                          {% static  "img/no_image.png" %}{% endif %}" width="100%">
+                        </a>
+                      </div>
+                  </div>
+                    <div class="product-body">
+							<h3 class="product-price">${{ p.price }}</h3>
+							<div class="product-rating">
+								<i class="fa fa-star{% if p.average_review < 1%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if p.average_review < 2%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if p.average_review < 3%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if p.average_review < 4%}-o empty{% endif%}"></i>
+                                <i class="fa fa-star{% if p.average_review < 5%}-o empty{% endif%}"></i>
+                                {{ p.average_review | floatformat:"1" }} / {{ p.count_review }}
+							</div>
+							<h2 class="product-name"><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h2>
+						</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

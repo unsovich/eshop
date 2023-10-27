@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Order {{ order.id }} {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-center">Order {{ order.id }}</h1>
+        <table class="shopping-cart-table table">
+          <tr>
+            <th>Created:</th>
+            <td>{{ order.created }}</td>
+          </tr>
+          <tr>
+            <th>Customer:</th>
+            <td>{{ order.first_name }} {{ order.last_name }}</td>
+          </tr>
+          <tr>
+            <th>E-mail:</th>
+            <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
+          </tr>
+          <tr>
+            <th>Address:</th>
+          <td>
+            {{ order.address }},
+            {{ order.postal_code }} {{ order.city }}
+          </td>
+          </tr>
+          <tr>
+            <th>Total amount:</th>
+            <td>${{ order.get_total_cost }}</td>
+          </tr>
+          <tr>
+            <th>Status:</th>
+            <td style="{% if order.paid %}color: #008000;{% else %}color: #FF0000;{% endif %}">{% if order.paid %}Paid{% else %}Pending payment{% endif %}</td>
+          </tr>
+          <tr>
+            <th>Stripe payment:</th>
+            <td>
+              {% if order.stripe_id %}
+                <a href="{{ order.get_stripe_url }}" target="_blank">
+                  {{ order.stripe_id }}
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+        <br>
+        <h2 class="text-center">Items bought</h2>
+        <table class="shopping-cart-table table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order.items.all %}
+              <tr class="row{% cycle "1" "2" %}">
+                <td class="text-left">
+                    <a href="/product/{{ item.product_id }}/{{ item.product.slug }}">
+                        <img src="{{ item.product.image.url }}" alt="" style="height: 50px">
+                    </a>
+                </td>
+                <td>{{ item.product.name }}</td>
+                <td class="num">${{ item.price }}</td>
+                <td class="num">{{ item.quantity }}</td>
+                <td class="num">${{ item.get_cost }}</td>
+              </tr>
+            {% endfor %}
+            {% if order.coupon %}
+              <tr class="subtotal">
+                <td colspan="4">Subtotal</td>
+                <td class="num">
+                  ${{ order.get_total_cost_before_discount|floatformat:2 }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                  "{{ order.coupon.code }}" coupon
+                  ({{ order.discount }}% off)
+                </td>
+                <td class="num neg">
+                  - ${{ order.get_discount|floatformat:2 }}
+                </td>
+              </tr>
+            {% endif %}
+            <tr class="total">
+              <td colspan="4">Total</td>
+              <td class="num">
+                ${{ order.get_total_cost|floatformat:2 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="text-align: center;">
+            <a class="primary-btn" href="#" onclick="window.print();">
+              Print order
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
